@@ -8,8 +8,8 @@ export default {
             description: payload.description,
             hourlyRate: payload.hourlyRate
         }
-        // const token = context.rootGetters.token
-        const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json`,{
+        const token = context.rootGetters.token
+        const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json?auth=${token}`,{
             method: "PUT",
             body: JSON.stringify(formData)
         })
