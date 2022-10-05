@@ -1,7 +1,9 @@
 <template>
-    <base-card>
-        <coach-form @send-data="sendDataHandler"></coach-form>   
-    </base-card>
+    <div>
+        <base-card>
+            <coach-form @send-data="sendDataHandler"></coach-form>   
+        </base-card>
+    </div>
 </template>
 
 <script>

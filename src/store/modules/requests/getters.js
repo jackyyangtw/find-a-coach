@@ -3,7 +3,7 @@ export default {
         const coachId = rootGetters.userId;
         return state.requests.filter(request => request.coachId === coachId)
     },
-    hasRequest(getters) {
+    hasRequest(_,getters) {
         return getters.requests && getters.requests.length > 0
     }
 }

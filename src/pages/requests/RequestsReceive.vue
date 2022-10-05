@@ -3,8 +3,11 @@
         <header>
             <h2>Request Received</h2>
         </header>
-        <h3 v-if="!hasRequest">You haven't received any request yet !</h3>
-        <ul v-else>
+        <div v-if="isLoading">
+            <base-spinner></base-spinner>
+        </div>
+        <h3 v-if="!hasRequest && !isLoading">You haven't received any request yet !</h3>
+        <ul v-else-if="hasRequest && !isLoading">
             <request-item v-for="req in receivedRequest" :key="req.id" :email="req.email" :message="req.message"></request-item>
         </ul>
     </base-card>
@@ -13,6 +16,11 @@
 <script>
 import RequestItem from '../../components/coaches/RequestItem.vue';
 export default {
+    data() {
+        return {
+            isLoading: false
+        }
+    },
     components: {
         RequestItem
     },
@@ -23,6 +31,16 @@ export default {
         receivedRequest() {
             return this.$store.getters['requests/requests']
         }
+    },
+    methods: {
+        async loadRequests() {
+            this.isLoading = true;
+            await this.$store.dispatch('requests/loadRequests')
+            this.isLoading = false;
+        }
+    },
+    created() {
+        this.loadRequests();
     }
 }
 </script>

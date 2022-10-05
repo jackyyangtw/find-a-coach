@@ -9,13 +9,15 @@ export default {
             description: payload.description,
             hourlyRate: payload.hourlyRate
         }
-        const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json`,{
+        const token = context.rootGetters.token
+        const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json?auth=${token}`,{
             method: "put",
             body: JSON.stringify(formData)
         })
 
         if(!res.ok){
             // error handling
+            // throw new Error(res.message || 'Failed to fetch !')
         }
 
         context.commit("registerCoach",{
@@ -23,12 +25,22 @@ export default {
             id: userId
         })
     },
-    async loadCoaches(context) {
+    
+    async loadCoaches(context, payload) {
+
+        if(!payload.forceRefresh && !context.getters.shouldUpdate) {
+            return
+        }
 
         const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches.json`)
 
         // { {},{},{} }
         const datas = await res.json();
+
+        if(!res.ok){
+            // error handling
+            throw new Error(datas.message || 'Failed to fetch !')
+        }
 
         const coaches = [];
 
@@ -56,7 +68,8 @@ export default {
         //     coaches.push(coach)
         // }
 
-        context.commit("setCoaches",coaches)
+        context.commit("setCoaches",coaches);
+        context.commit("setFetchTimestamp");
 
     }
 }
