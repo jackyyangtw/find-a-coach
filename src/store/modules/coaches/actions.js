@@ -2,16 +2,15 @@ export default {
     async registerCoach(context,payload) {
         const userId = context.rootGetters.userId;
         const formData = {
-            id: context.rootGetters.userId,
             firstName: payload.firstName,
             lastName: payload.lastName,
             areas: payload.areas,
             description: payload.description,
             hourlyRate: payload.hourlyRate
         }
-        const token = context.rootGetters.token
-        const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json?auth=${token}`,{
-            method: "put",
+        // const token = context.rootGetters.token
+        const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json`,{
+            method: "PUT",
             body: JSON.stringify(formData)
         })
 
@@ -37,7 +36,7 @@ export default {
         // { {},{},{} }
         const datas = await res.json();
 
-        if(!res.ok){
+        if(!res.ok && context.rootGetters.coaches.length === 0){
             // error handling
             throw new Error(datas.message || 'Failed to fetch !')
         }

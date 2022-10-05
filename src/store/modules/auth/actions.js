@@ -1,3 +1,4 @@
+import router from '../../../router';
 export default {
     async login(context,payload){
         const res = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAuEQuGmwBV5FgOjtnTFfYX4CvtdBVzexE',{
@@ -15,12 +16,13 @@ export default {
             throw new Error(data.error.message || 'Something went wrong!')
         } else {
             // show success dialog
+            context.commit('setUser',{
+                token: data.idToken,
+                userId: data.localId,
+                tokenExpiration: data.expiresIn
+            })
+            router.replace('/coaches')
         }
-        context.commit('setUser',{
-            token: data.idToken,
-            userId: data.localId,
-            tokenExpiration: data.expiresIn
-        })
     },
     async signup(context,payload){
         const res = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAuEQuGmwBV5FgOjtnTFfYX4CvtdBVzexE',{
@@ -38,12 +40,12 @@ export default {
             throw new Error(data.error.message || 'Something went wrong!')
         } else {
             // show success dialog
-            context.commit('setSignupSuccess');
             context.commit('setUser',{
                 token: data.idToken,
                 userId: data.localId,
                 tokenExpiration: data.expiresIn
             })
+            context.commit('setSignupSuccess');
         }
     },
 }
