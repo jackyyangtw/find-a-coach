@@ -10,7 +10,7 @@
             <base-card>
                 <header>
                     <h2>Interested? Reach out now !</h2>
-                    <base-button link :to="contactLink">Contact</base-button>
+                    <base-button v-if="!isInContactPage" link :to="contactLink">Contact</base-button>
                 </header>
                 <router-view></router-view>
             </base-card>
@@ -35,7 +35,8 @@ export default {
     },
     computed: {
         contactLink() {
-            return this.$route.path + '/' + this.id
+            // return this.$route.path + '/contact'
+            return `/coaches/${this.id}/contact`
         },
         fullName() {
             return this.selectedCoach.firstName + " " + this.selectedCoach.lastName
@@ -48,11 +49,15 @@ export default {
         },
         description () {
             return this.selectedCoach.description
+        },
+        isInContactPage(){
+            return this.$route.path === `/coaches/${this.id}/contact`
         }
     },
     created() {
         this.selectedCoach = this.$store.getters['coaches/coaches'].find(coach => coach.id === this.$route.params.id)
         // console.log(this.$route.params.id)
+        console.log(this.$route)
     }
 }
 </script>

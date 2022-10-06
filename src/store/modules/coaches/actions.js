@@ -1,6 +1,6 @@
 export default {
-    async registerCoach(context,payload) {
-        const userId = context.rootGetters.userId;
+    async registerCoach({rootGetters,commit},payload) {
+        const userId = rootGetters.userId;
         const formData = {
             firstName: payload.firstName,
             lastName: payload.lastName,
@@ -8,7 +8,7 @@ export default {
             description: payload.description,
             hourlyRate: payload.hourlyRate
         }
-        const token = context.rootGetters.token
+        const token = rootGetters.token;
         const res = await fetch(`${process.env.VUE_APP_BASEURL}/coaches/${userId}.json?auth=${token}`,{
             method: "PUT",
             body: JSON.stringify(formData)
@@ -19,7 +19,7 @@ export default {
             // throw new Error(res.message || 'Failed to fetch !')
         }
 
-        context.commit("registerCoach",{
+        commit("registerCoach",{
             ...formData,
             id: userId
         })
@@ -42,6 +42,10 @@ export default {
         }
 
         const coaches = [];
+
+        if(!datas || datas.length === 0) {
+            return
+        }
 
         Object.keys(datas).forEach(key => {
             const coach = {

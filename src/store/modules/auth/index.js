@@ -2,13 +2,13 @@ import actions from './actions';
 import mutations from './mutations';
 import getters from './getters';
 export default {
-    namespaced: true,
+    // namespaced: true,
     state(){
         return {
             userId: null,
-            tokenExpiration: null,
             token: null,
-            isSignupSuccess: false
+            isSignupSuccess: false,
+            didAutoLogout: false
         }
     },
     actions,

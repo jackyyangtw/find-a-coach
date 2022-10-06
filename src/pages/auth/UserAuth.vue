@@ -16,7 +16,7 @@
                     <input type="email" id="email" v-model.trim="email"/>
                 </div>
                 <div class="form-control">
-                    <label for="password">E-Mail</label>
+                    <label for="password">Password</label>
                     <input type="password" id="password" v-model.trim="password"/>
                 </div>
                 <p class="errors" v-if="!formIsValid">Please enter a valid email and password!</p>
@@ -41,13 +41,16 @@ export default {
     },
     computed: {
         submitBtnText(){
-            return this.mode === 'login' ? 'Login' : 'Signup'
+            return this.mode === 'login' ? 'Login' : 'Signup and reigster'
         },
         switchModeBtnText() {
-            return this.mode === 'login' ? 'Signup instead' : 'Login'
+            return this.mode === 'login' ? 'Signup and reigster' : 'Login'
         },
         isSignupSuccess() {
-            return this.$store.getters['auth/isSignupSuccess']
+            return this.$store.getters['isSignupSuccess']
+        },
+        isCoach() {
+            return this.$store.getters['coaches/isCoach']
         }
     },
     methods: {
@@ -67,11 +70,13 @@ export default {
 
             try {
                 if(this.mode === 'login') {
-                    await this.$store.dispatch('auth/login',actionPayload);
-                    // this.$router.replace('/coaches');
+                    await this.$store.dispatch('login',actionPayload);
+                    const redirectUrl = !this.isCoach ? `/${this.$route.query.redirect}` : '/coaches';
+                    // const redirectUrl = `/${this.$route.query.redirect || 'coaches'}`
+                    this.$router.replace(redirectUrl);
                 }
                 else {
-                    await this.$store.dispatch('auth/signup',actionPayload)
+                    await this.$store.dispatch('signup',actionPayload)
                 }
             }
             catch (err) {
@@ -92,7 +97,7 @@ export default {
             }
         },
         closeSuccessDialog() {
-            this.$store.commit('auth/closeSuccessDialog');
+            this.$store.commit('closeSuccessDialog');
         }
     }
 }

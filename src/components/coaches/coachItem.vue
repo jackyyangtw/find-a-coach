@@ -6,7 +6,7 @@
             <base-badge v-for="area in areas" :key="area" :title="area" :type="area"></base-badge>
         </div>
         <div class="actions">
-            <base-button mode="outline" link :to="coachContactLink">Contact</base-button>
+            <base-button :isUser="isUser" v-if="!isUser" mode="outline" link :to="coachContactLink">Contact</base-button>
             <base-button link :to="coachDetailsLink">View Details</base-button>
         </div>
     </li>
@@ -24,7 +24,12 @@ export default {
         },
         coachDetailsLink(){
             return `${this.$route.path}/${this.id}`
-        }
+        },
+		isUser(){
+			const userId = this.$store.getters.userId;
+			const thisUser = this.$store.getters['coaches/coaches'].find(coach => coach.id === userId);
+			return thisUser ? true : false
+		}
     }
 }
 </script>

@@ -3,6 +3,7 @@
         <base-dialog :show="!!error" title="An Error occurred" @close="handlerError">
             <p>{{ error }}</p>
         </base-dialog>
+        <user-info v-if="isAuthenticated"></user-info>
         <section>
             <coach-filter @change-filter="filterChangeHandler"></coach-filter>
         </section>
@@ -10,7 +11,8 @@
             <section>
                 <div class="controls">
                     <base-button mode="outline" @click="loadCoaches(true)">Refresh</base-button>
-                    <base-button v-if="!isCoach && !isLoading" link to="/register">Register as a Coach</base-button>
+                    <base-button v-if="!isLoading && !isCoach && !isAuthenticated" link to="/auth?redirect=register">Login to register as a coach!</base-button>
+                    <base-button v-if="!isCoach && !isLoading && isAuthenticated" link to="/register">Register as a Coach</base-button>
                 </div>
                 <div v-if="isLoading">
                     <base-spinner></base-spinner>
@@ -29,8 +31,9 @@
 <script>
 import coachItem from '../../components/coaches/coachItem.vue';
 import CoachFilter from '../../components/coaches/CoachFilter.vue';
+import UserInfo from '../../components/auth/UserInfo.vue';
 export default {
-    components: {coachItem,CoachFilter },
+    components: {coachItem,CoachFilter,UserInfo },
     data() {
         return {
             isLoading: false,
@@ -43,6 +46,9 @@ export default {
         }
     },
     computed: {
+        isAuthenticated(){
+            return this.$store.getters.isAuthenticated;
+        },
         filteredCoaches(){
             const coaches = this.$store.getters['coaches/coaches']
             return coaches.filter(coach => {

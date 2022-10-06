@@ -102,7 +102,7 @@ export default {
             const formData = {
                 firstName: this.firstName.val,
                 lastName: this.lastName.val,
-                descrption: this.description.val,
+                description: this.description.val,
                 hourlyRate: this.hourlyRate.val,
                 areas: this.areas.val
             }

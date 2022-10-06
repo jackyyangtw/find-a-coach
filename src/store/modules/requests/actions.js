@@ -28,7 +28,12 @@ export default {
         if(!res.ok) {
             throw new Error(datas.message || 'Failed to send request !')
         }
+
         const requests = [];
+
+        if(!datas || datas.length === 0) {
+            return
+        }
         Object.keys(datas).forEach(key => {
             requests.push({
                 id: key,
