@@ -18,7 +18,10 @@ const router = createRouter({
         },
         {
             path: '/coaches',
-            component: CoachesList
+            component: CoachesList,
+            meta: {
+                coachesRouteRole: true
+            }
         },
         {
             path: '/coaches/:id',
@@ -60,16 +63,13 @@ const router = createRouter({
     ]
 })
 
-router.beforeEach((to,_,next) => {
+router.beforeEach((to,from,next) => {
     if(to.meta.requiresAuth && !store.getters.isAuthenticated) {
         next('/auth')
     }
     else if(to.meta.requiresUnAuth && store.getters.isAuthenticated) {
         next('/coaches')
     }
-    // else if(to.meta.isCoach && to.meta.requiresAuth && store.getters['coaches/isCoach']) {
-    //     next('/coaches')
-    // }
     else {
         next();
     }

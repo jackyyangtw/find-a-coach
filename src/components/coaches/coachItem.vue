@@ -14,7 +14,7 @@
 
 <script>
 export default {
-    props: ['firstName','lastName','hourlyRate','areas','id'],
+    props: ['firstName','lastName','hourlyRate','areas','id','isUser'],
     computed: {
         fullName(){
             return this.firstName + " " + this.lastName
@@ -25,11 +25,11 @@ export default {
         coachDetailsLink(){
             return `${this.$route.path}/${this.id}`
         },
-		isUser(){
-			const userId = this.$store.getters.userId;
-			const thisUser = this.$store.getters['coaches/coaches'].find(coach => coach.id === userId);
-			return thisUser ? true : false
-		}
+        // isUser(){
+        //   const userId = this.$store.getters.userId;
+        //   const thisUser = this.$store.getters['coaches/coaches'].find(coach => coach.id === userId);
+        //   return thisUser ? true : false
+        // }
     }
 }
 </script>

@@ -1,5 +1,5 @@
 export default {
-    async registerCoach({rootGetters,commit},payload) {
+    async registerCoach({rootGetters,commit,dispatch},payload) {
         const userId = rootGetters.userId;
         const formData = {
             firstName: payload.firstName,
@@ -23,6 +23,8 @@ export default {
             ...formData,
             id: userId
         })
+        dispatch('loadCoaches',{forceRefresh: true})
+
     },
     
     async loadCoaches(context, payload) {
@@ -46,33 +48,24 @@ export default {
         if(!datas || datas.length === 0) {
             return
         }
-
+        
         Object.keys(datas).forEach(key => {
+            const isUser = context.rootGetters.userId === key ? true : false;
             const coach = {
                 id: key,
                 firstName: datas[key].firstName,
                 lastName: datas[key].lastName,
                 description: datas[key].description,
                 hourlyRate: datas[key].hourlyRate,
-                areas: datas[key].areas
+                areas: datas[key].areas,
+                isUser
             }
             coaches.push(coach)
         })
 
-        // for (const key in data) {
-        //     const coach = {
-        //         id: key,
-        //         firstName: data[key].firstName,
-        //         lastName: data[key].lastName,
-        //         description: data[key].description,
-        //         hourlyRate: data[key].hourlyRate,
-        //         areas: data[key].areas
-        //     }
-        //     coaches.push(coach)
-        // }
-
         context.commit("setCoaches",coaches);
         context.commit("setFetchTimestamp");
+        console.log('coaches loaded')
 
     }
 }

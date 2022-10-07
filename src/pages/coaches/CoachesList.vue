@@ -18,7 +18,7 @@
                     <base-spinner></base-spinner>
                 </div>
                 <ul v-if="hasCoaches">
-                    <coach-item v-for="coach in filteredCoaches" :key="coach.id" :id="coach.id" :first-name="coach.firstName" :last-name="coach.lastName" :hourlyRate="coach.hourlyRate" :areas="coach.areas">
+                    <coach-item v-for="coach in filteredCoaches" :isUser="coach.isUser" :key="coach.id" :id="coach.id" :first-name="coach.firstName" :last-name="coach.lastName" :hourlyRate="coach.hourlyRate" :areas="coach.areas">
                         {{ coach.firstName }}
                     </coach-item>
                 </ul>

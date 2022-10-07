@@ -18,5 +18,16 @@ export default {
     },
     didAutoLogout(state) {
         return state.didAutoLogout
+    },
+    isLogin(state) {
+        const localStorageToken = localStorage.getItem('token');
+        if(state.token || localStorageToken) {
+            return true
+        } else {
+            return false
+        }
+    },
+    isUser(){
+        return 
     }
 }

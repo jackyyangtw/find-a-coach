@@ -19,9 +19,11 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" v-model.trim="password"/>
                 </div>
-                <p class="errors" v-if="!formIsValid">Please enter a valid email and password!</p>
-                <base-button>{{ submitBtnText }}</base-button>
-                <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeBtnText }}</base-button>
+                <p class="errors" v-if="!formIsValid">Please enter a valid email and password, password must have 6 characters</p>
+                <div style="margin-top: 2em">
+                    <base-button>{{ submitBtnText }}</base-button>
+                    <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeBtnText }}</base-button>
+                </div>
             </form>
         </base-card>
     </div>
@@ -51,6 +53,9 @@ export default {
         },
         isCoach() {
             return this.$store.getters['coaches/isCoach']
+        },
+        isLogin(){
+            return this.$store.getters.isLogin
         }
     },
     methods: {
@@ -71,8 +76,14 @@ export default {
             try {
                 if(this.mode === 'login') {
                     await this.$store.dispatch('login',actionPayload);
-                    const redirectUrl = !this.isCoach ? `/${this.$route.query.redirect}` : '/coaches';
-                    // const redirectUrl = `/${this.$route.query.redirect || 'coaches'}`
+                    let redirectUrl;
+                    if(!this.isCoach && this.isLogin) {
+                        redirectUrl = '/coaches'
+                    } else if(!this.isCoach) {
+                        redirectUrl = `/${this.$route.query.redirect}`
+                    } else {
+                        redirectUrl = '/coaches'
+                    }
                     this.$router.replace(redirectUrl);
                 }
                 else {

@@ -17,11 +17,11 @@ export default {
             ...payload,
             mode: 'signup',
             successHandler: () => {
-                context.commit('setSignupSuccess');
+                // context.commit('setSignupSuccess');
                 if(context.getters['coaches/isCoach']) {
                     router.replace('/coaches')
                 }
-                router.replace('/register')
+                router.replace('/register');
             }
         })
     },
@@ -59,15 +59,19 @@ export default {
                 context.dispatch('autoLogout')
             }, expiresIn);
 
+            
             context.commit('setUser',{
                 token: data.idToken,
                 userId: data.localId,
             })
 
+            
+            
             if(!payload.successHandler) {
                 return
             }
             payload.successHandler();
+            context.dispatch('coaches/loadCoaches',{forceRefresh: true},{root: true});
         }
     },
     tryLogin(context) {
@@ -92,7 +96,7 @@ export default {
             })
         }
     },
-    logout(context){
+    async logout(context){
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('tokenExpiration');
@@ -100,10 +104,14 @@ export default {
 
         clearTimeout(timer)
 
+        
         context.commit('setUser',{
             token: null,
             userId: null,
         })
+
+        await context.dispatch('coaches/loadCoaches',{forceRefresh: true},{root: true});
+        
     },
     autoLogout(context) {
         context.dispatch('logout');

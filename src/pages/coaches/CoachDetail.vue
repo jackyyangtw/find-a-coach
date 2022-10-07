@@ -6,7 +6,7 @@
                 <h3>${{ rate }}/hour</h3>
             </base-card>
         </section>
-        <section>
+        <section v-if="!isUser">
             <base-card>
                 <header>
                     <h2>Interested? Reach out now !</h2>
@@ -52,12 +52,14 @@ export default {
         },
         isInContactPage(){
             return this.$route.path === `/coaches/${this.id}/contact`
+        },
+        isUser(){
+            const userId = this.$store.getters.userId
+            return userId === this.$route.params.id
         }
     },
     created() {
         this.selectedCoach = this.$store.getters['coaches/coaches'].find(coach => coach.id === this.$route.params.id)
-        // console.log(this.$route.params.id)
-        console.log(this.$route)
     }
 }
 </script>
