@@ -42,7 +42,6 @@ export default {
         })
         const data = await res.json();
 
-        console.log(data)
 
         if(!res.ok) {
             throw new Error(data.error.message || 'Something went wrong!')

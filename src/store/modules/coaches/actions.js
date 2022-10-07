@@ -65,7 +65,6 @@ export default {
 
         context.commit("setCoaches",coaches);
         context.commit("setFetchTimestamp");
-        console.log('coaches loaded')
 
     }
 }

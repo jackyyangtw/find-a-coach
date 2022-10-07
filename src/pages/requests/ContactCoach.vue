@@ -1,18 +1,26 @@
 <template>
-    <form @submit.prevent="submitHandler">
-        <div class="form-control">
-            <label for="email">E-mail</label>
-            <input type="text" id="email" v-model.trim="email"/>
-        </div>
-        <div class="form-control">
-            <label for="message">Message</label>
-            <textarea rows="5" type="textarea" id="message" v-model.trim="message"></textarea>
-        </div>
-        <p v-if="!isFormValid" class="error">Please enter a valid email and message!</p>
-        <div class="actions">
-            <base-button>Send Message</base-button>
-        </div>
-    </form>
+    <div>
+        <base-dialog :show="isRequestSuccess" title="Success!" @close="redirectToCoaches">
+            Send request to coach successfully!
+        </base-dialog>
+        <base-dialog :show="isLoading" title="Sending request..." fixed>
+            <base-spinner></base-spinner>
+        </base-dialog>
+        <form @submit.prevent="submitHandler">
+            <div class="form-control">
+                <label for="email">E-mail</label>
+                <input type="text" id="email" v-model.trim="email"/>
+            </div>
+            <div class="form-control">
+                <label for="message">Message</label>
+                <textarea rows="5" type="textarea" id="message" v-model.trim="message"></textarea>
+            </div>
+            <p v-if="!isFormValid" class="errors">Please enter a valid email and message!</p>
+            <div class="actions">
+                <base-button>Send Message</base-button>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
@@ -21,21 +29,28 @@ export default {
         return {
             email: '',
             message: '',
-            isFormValid: true
+            isFormValid: true,
+            isRequestSuccess: false,
+            isLoading: false
         }
     },
     methods: {
-        submitHandler() {
+        async submitHandler() {
             this.isFormValid = true;
             if(this.email === '' || this.message === '' || !this.email.includes('@')) {
                 this.isFormValid = false;
                 return
             }
-            this.$store.dispatch('requests/contactCoach',{
+            this.isLoading = true;
+            await this.$store.dispatch('requests/contactCoach',{
                 email: this.email,
                 message: this.message,
                 coachId: this.$route.params.id
             })
+            this.isLoading = false;
+            this.isRequestSuccess = true;
+        },
+        redirectToCoaches(){
             this.$router.replace('/coaches')
         }
     }
